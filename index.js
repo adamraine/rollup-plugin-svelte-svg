@@ -1,4 +1,4 @@
-const { extname, dirname, resolve } = require("path");
+const { extname, dirname } = require("path");
 const { readFile } = require("fs").promises;
 
 const { optimize: optimise } = require("svgo");
@@ -29,7 +29,7 @@ exports.svelteSVG = function svelteSVG(options = {}) {
 		resolveId(source, importer) {
 			if (!filter(source) || extname(source) !== ".svg") return null;
 
-			return resolve(dirname(importer), source + ".svelte");
+			return require.resolve(source, {paths: [dirname(importer)]}).concat(".svelte");
 		},
 
 		load(id) {
